@@ -1,0 +1,67 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:11
+    environment:
+      POSTGRES_DB: fitly
+      POSTGRES_USER: fitly
+      POSTGRES_PASSWORD: fitly
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:4.6
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@postgres.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+       - pgadmin:/root/.pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  app_server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    restart: unless-stopped
+    volumes:
+        - ./server/:/code
+    ports:
+        - "5000:5000"
+    networks:
+        - postgres
+
+  app_front:
+    build:
+      context: .
+      dockerfile: ./front/Dockerfile
+    restart: unless-stopped
+    command: bash -c "npx vue-cli-service serve"
+    volumes:
+        - ./front/:/code
+    ports:
+        - "8080:8080"
+    networks:
+        - postgres
+
+
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:
