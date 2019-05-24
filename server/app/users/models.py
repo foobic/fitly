@@ -2,12 +2,13 @@ from app.database import db
 from passlib.hash import pbkdf2_sha256 as sha256
 
 
-class UserModel(db.Model):
+class UsersModel(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    # links = db.relationship("LinksModel")
 
     def save_to_db(self):
         db.session.add(self)
@@ -22,7 +23,7 @@ class UserModel(db.Model):
         def to_json(x):
             return {'username': x.username, 'password': x.password}
         return {'users': list(
-            map(lambda x: to_json(x), UserModel.query.all())
+            map(lambda x: to_json(x), UsersModel.query.all())
         )}
 
     @classmethod

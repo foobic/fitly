@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from .models import UserModel, RevokedTokenModel
+from .models import UsersModel, RevokedTokenModel
 import flask_jwt_extended as flask_jwt
 
 from app import jwt
@@ -24,26 +24,27 @@ class UserRegistration(Resource):
         username = data['username']
         password = data['password']
 
-        if UserModel.find_by_username(username):
+        if UsersModel.find_by_username(username):
             return {'message': f'User {username} already exists'}
 
-        new_user = UserModel(
+        new_user = UsersModel(
             username=username,
-            password=UserModel.generate_hash(password)
+            password=UsersModel.generate_hash(password)
         )
 
         try:
             new_user.save_to_db()
             access_token = flask_jwt.create_access_token(
-                identity=username)
+                identity=new_user)
             refresh_token = flask_jwt.create_refresh_token(
-                identity=username)
+                identity=new_user)
             return {
                 'message': f'User {username} was created',
                 'access_token': access_token,
                 'refresh_token': refresh_token
             }
-        except Exception:
+        except Exception as e:
+            print(e)
             return {'message': 'Something went wrong'}, 500
 
 
@@ -52,16 +53,16 @@ class UserLogin(Resource):
         data = parser.parse_args()
         username = data['username']
         password = data['password']
-        current_user = UserModel.find_by_username(username)
+        current_user = UsersModel.find_by_username(username)
 
         if not current_user:
             return {'message': f'User {username} doesn\'t exist'}
 
-        if UserModel.verify_hash(password, current_user.password):
+        if UsersModel.verify_hash(password, current_user.password):
             access_token = flask_jwt.create_access_token(
-                identity=username)
+                identity=current_user)
             refresh_token = flask_jwt.create_refresh_token(
-                identity=username)
+                identity=current_user)
             return {
                 'message': f'Logged in as {current_user.username}',
                 'access_token': access_token,
@@ -79,7 +80,8 @@ class UserLogoutAccess(Resource):
             revoked_token = RevokedTokenModel(jti=jti)
             revoked_token.add()
             return {'message': 'Access token has been revoked'}
-        except Exception:
+        except Exception as e:
+            print(e)
             return {'message': 'Something went wrong'}, 500
 
 
@@ -91,7 +93,8 @@ class UserLogoutRefresh(Resource):
             revoked_token = RevokedTokenModel(jti=jti)
             revoked_token.add()
             return {'message': 'Refresh token has been revoked'}
-        except Exception:
+        except Exception as e:
+            print(e)
             return {'message': 'Something went wrong'}, 500
 
 

@@ -6,6 +6,7 @@ from app.database import db
 from app.jwt import jwt
 
 from app.users.routes import users_blueprint
+from app.links.routes import links_blueprint
 from . import config
 
 
@@ -28,6 +29,8 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
+    app.register_blueprint(
+        links_blueprint)
     app.register_blueprint(
         users_blueprint, url_prefix='/users/')
 
