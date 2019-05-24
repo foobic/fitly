@@ -16,21 +16,7 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-  
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4:4.6
-    environment:
-      PGADMIN_DEFAULT_EMAIL: postgres@postgres.org
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-       - pgadmin:/root/.pgadmin
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-
+    
   app_server:
     build:
       context: .
