@@ -1,7 +1,7 @@
 <template>
-  <div class="index">
-    <h1>Index</h1>
-  </div>
+  <v-container class="index">
+    <v-layout text-xs-center wrap>Index</v-layout>
+  </v-container>
 </template>
 
 <script>

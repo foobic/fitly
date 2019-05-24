@@ -2,7 +2,7 @@
   <div class="account">
     <div v-if="user.username" class="account-authorized">Authorized</div>
     <div v-else class="account-no-authorized">
-      <h1>This is an Account page.</h1>
+      <h1>This is an Account page</h1>
     </div>
   </div>
 </template>

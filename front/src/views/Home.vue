@@ -1,14 +1,11 @@
 <template>
-  <div class="home">
-    <Index />
-  </div>
+  <Index />
 </template>
 
 <script>
-import Index from "@/components/Index.vue";
+import Index from "../components/Index";
 
 export default {
-  name: "home",
   components: {
     Index
   }
