@@ -8,6 +8,7 @@ from app.jwt import jwt
 from app.users.routes import users_blueprint
 from app.links.routes import links_blueprint
 from . import config
+from flask_cors import CORS
 
 
 def create_app(config=config.DevConfig):
@@ -15,10 +16,10 @@ def create_app(config=config.DevConfig):
 
     app.config.from_object(config)
     app.url_map.strict_slashes = False
-
+    CORS(app, supports_credentials=True)
     register_extensions(app)
     register_blueprints(app)
-    register_errorhandlers(app)
+    # register_errorhandlers(app)
 
     return app
 
