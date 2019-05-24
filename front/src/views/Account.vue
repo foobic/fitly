@@ -1,16 +1,17 @@
 <template>
   <div class="account">
-    <div v-if="user.username" class="account-authorized">Authorized</div>
-    <div v-else class="account-no-authorized">
-      <h1>This is an Account page</h1>
-    </div>
+    <Authorized v-if="user.username" />
+    <NoAuthorized v-else />
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
+import Authorized from "../components/account/Authorized";
+import NoAuthorized from "../components/account/NoAuthorized";
 
 export default {
   name: "account",
+  components: { NoAuthorized, Authorized },
   data() {
     return {};
   },
@@ -19,3 +20,5 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped></style>

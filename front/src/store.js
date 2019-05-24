@@ -13,6 +13,8 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   getters: {
-    user: state => state.user
+    user: function(state) {
+      return state.user;
+    }
   }
 });
