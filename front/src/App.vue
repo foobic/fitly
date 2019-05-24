@@ -1,22 +1,12 @@
 <template>
   <v-app>
     <v-toolbar color="primary">
-      <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
-      <!-- <v-icon color="white"> -->
-      <!-- <img
-        src="https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-        alt
-      />-->
-      <!-- </v-icon> -->
-
       <v-btn icon @click="redirectToHome">
         <v-icon color="white" class="logo">trip_origin</v-icon>
       </v-btn>
 
       <v-toolbar-title>
-        <router-link to="/" class="toolbar-title toolbar-link" value="Fitly"
-          >Fitly</router-link
-        >
+        <router-link to="/" class="toolbar-title toolbar-link" value="Fitly">Fitly</router-link>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
