@@ -8,7 +8,7 @@ export default new Vuex.Store({
   state: {
     url: "",
     hashedUrl: "",
-    user: { username: "" },
+    user: { username: "", authorized: true },
     links: {},
     urlPrefix: `${process.env.VUE_APP_SERVER_URL}/l/`
   },

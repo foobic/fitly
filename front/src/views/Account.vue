@@ -1,6 +1,6 @@
 <template>
   <div class="account">
-    <Authorized v-if="user.username" />
+    <Authorized v-if="user.authorized" />
     <NoAuthorized v-else />
   </div>
 </template>

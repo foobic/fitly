@@ -11,6 +11,9 @@
 
       <v-spacer></v-spacer>
 
+      <v-btn icon @click="redirectToStat" v-if="user.authorized">
+        <v-icon color="white">equalizer</v-icon>
+      </v-btn>
       <v-btn icon @click="redirectToAccount">
         <v-icon color="white">account_circle</v-icon>
       </v-btn>
@@ -22,10 +25,14 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "App",
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters(["user"])
   },
   methods: {
     redirectToAccount() {
@@ -33,6 +40,9 @@ export default {
     },
     redirectToHome() {
       this.$router.push("/");
+    },
+    redirectToStat() {
+      this.$router.push("/statistics");
     }
   }
 };
