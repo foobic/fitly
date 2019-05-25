@@ -24,7 +24,7 @@ export default new Vuex.Store({
       ctx.commit("changeUrl", payload);
     },
     async createHashedUrl(ctx, payload) {
-      const res = await axios.post("http://localhost:5000/links", {
+      const res = await axios.post(`${process.env.VUE_APP_API_URL}/links`, {
         url: payload.url
       });
       ctx.commit("changeHashedUrl", { hashedUrl: res.data.hashed_url });
