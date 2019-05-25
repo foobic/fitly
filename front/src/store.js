@@ -9,7 +9,8 @@ export default new Vuex.Store({
     url: "",
     hashedUrl: "",
     user: { username: "" },
-    links: {}
+    links: {},
+    urlPrefix: `${process.env.VUE_APP_SERVER_URL}/l/`
   },
   mutations: {
     changeUrl(state, payload) {
@@ -27,6 +28,7 @@ export default new Vuex.Store({
       const res = await axios.post(`${process.env.VUE_APP_API_URL}/links`, {
         url: payload.url
       });
+
       ctx.commit("changeHashedUrl", { hashedUrl: res.data.hashed_url });
     }
   },
@@ -39,6 +41,9 @@ export default new Vuex.Store({
     },
     hashedUrl: function(state) {
       return state.hashedUrl;
+    },
+    shortUrl: function(state) {
+      return state.urlPrefix + state.hashedUrl;
     }
   }
 });

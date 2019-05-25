@@ -2,24 +2,22 @@
   <v-container class="index">
     <v-layout text-xs-center wrap>
       <v-flex>
-        <v-alert v-model="errAlert" dismissible type="error">
-          Unable to shorten that link. It is not a valid url. Make sure that you
-          dont forget about http/https part of url
+        <v-alert v-model="err.visibility" dismissible type="error">
+          {{ err.msg }}
         </v-alert>
         <div class="input-container">
           <input
             v-model="url"
-            @input="inputChanged"
             type="text"
             class="main-input"
             placeholder="Shorten your link"
           />
         </div>
-        <div class="result-container" v-if="showResult">
-          <a :href="shortenUrl">{{ shortenUrl }}</a>
+        <div class="result-container" v-if="result.visibility">
+          <a :href="shortUrl">{{ shortUrl }}</a>
         </div>
         <div class="button-container">
-          <button class="mybtn" @click="shorten">Shorten</button>
+          <button class="mybtn" @click="shortenUrl">Shorten</button>
         </div>
       </v-flex>
     </v-layout>
@@ -28,55 +26,50 @@
 
 <script>
 import { setTimeout } from "timers";
-function isUrlValid(url) {
-  const pattern = new RegExp(
-    "(https?:\\/\\/)" + // protocol
-    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-    "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-    "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
-  );
-  return !!pattern.test(url);
-}
+import { mapGetters } from "vuex";
+import { isUrlValid } from "@/helpers";
 
 export default {
   name: "Index",
   data() {
     return {
-      url: "",
-      errAlert: false,
-      showResult: false,
-      urlPrefix: `${process.env.VUE_APP_SERVER_URL}/l/`
+      url: "http://google.com",
+      err: { visibility: false, msg: "" },
+      result: { visibility: false }
     };
   },
   computed: {
-    shortenUrl: {
-      get() {
-        return this.urlPrefix + this.$store.getters.hashedUrl;
-      }
-    }
+    ...mapGetters(["shortUrl", "hashedUrl"])
   },
   methods: {
-    inputChanged() {
-      this.$store.dispatch("changeUrl", { url: this.url });
+    showErr(msg) {
+      this.result.visibility = false;
+      this.err.visibility = true;
+      this.err.msg = msg;
+      setTimeout(() => {
+        this.err.visibility = false;
+      }, 5000);
     },
-    async shorten() {
-      const url = this.$store.getters.url;
-      let loader = this.$loading.show({
-        container: this.fullPage ? null : this.$refs.formContainer
-      });
-      if (isUrlValid(url)) {
-        await this.$store.dispatch("createHashedUrl", { url });
-        this.showResult = true;
-      } else {
-        this.errAlert = true;
-        setTimeout(() => {
-          this.errAlert = false;
-        }, 5000);
+    async shortenUrl() {
+      const loader = this.$loading.show();
+      try {
+        if (
+          // If protocol does not specified
+          !(this.url.startsWith("http://") || this.url.startsWith("https://"))
+        ) {
+          this.url = `http://${this.url}`;
+        }
+
+        if (!isUrlValid(this.url)) return this.showErr("Url is not valid");
+
+        this.$store.dispatch("changeUrl", { url: this.url });
+        await this.$store.dispatch("createHashedUrl", { url: this.url });
+        this.result.visibility = true;
+      } catch (e) {
+        this.showErr(e);
+      } finally {
+        loader.hide();
       }
-      loader.hide();
     }
   }
 };
@@ -128,6 +121,10 @@ export default {
   margin: 30px 0;
   a {
     font-size: 2em;
+    word-break: break-all;
+    @media screen and (max-width: 400px) {
+      font-size: 1.4em;
+    }
     color: white;
     text-decoration: none;
     &:hover {
