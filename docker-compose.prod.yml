@@ -24,7 +24,7 @@ services:
       dockerfile: ./server/Dockerfile
     restart: unless-stopped
     env_file:
-        - .env.dev
+        - .env.prod
     volumes:
         - ./:/code
     ports:
@@ -37,10 +37,10 @@ services:
     build:
       context: .
       dockerfile: ./front/Dockerfile
-    restart: unless-stopped
+      #    restart: unless-stopped
     env_file:
-        - .env.dev
-    command: bash -c "npx vue-cli-service serve"
+        - .env.prod
+    command: bash -c "npx vue-cli-service build"
     volumes:
         - ./:/code
     ports:

@@ -1,12 +1,13 @@
 
 from flask import Flask, render_template
 import requests
-
+import os
 from app.database import db
 from app.jwt import jwt
 
 from app.users.routes import users_blueprint
 from app.links.routes import links_blueprint
+from app.static.routes import static_blueprint
 from . import config
 from flask_cors import CORS
 
@@ -30,6 +31,9 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
+    if os.getenv("SERVE_STATIC") == "1":
+        app.register_blueprint(
+            static_blueprint)
     app.register_blueprint(
         links_blueprint)
     app.register_blueprint(
