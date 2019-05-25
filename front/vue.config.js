@@ -6,5 +6,11 @@ module.exports = {
     watchOptions: {
       poll: true
     }
+  },
+  pwa: {
+    name: "MyFavicon",
+    iconPaths: {
+      favicon32: "./public/myfavicon.ico"
+    }
   }
 };
