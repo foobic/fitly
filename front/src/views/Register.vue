@@ -6,6 +6,9 @@
           <div class="text">
             <span>Registration</span>
           </div>
+          <v-alert v-model="err.visibility" dismissible type="error">
+            {{ err.msg }}
+          </v-alert>
           <div class="form justify-center">
             <v-form v-model="valid">
               <v-text-field
@@ -55,6 +58,7 @@ export default {
   name: "Register",
   data() {
     return {
+      err: { visibility: false, msg: "" },
       valid: false,
       username: "",
       usernameRules: [
@@ -81,12 +85,28 @@ export default {
     ...mapGetters(["user"])
   },
   methods: {
-    submit() {
+    showErr(msg) {
+      this.err.visibility = true;
+      this.err.msg = msg;
+      setTimeout(() => {
+        this.err.visibility = false;
+      }, 5000);
+    },
+    async submit() {
       if (!this.valid) return;
-      let loader = this.$loading.show({
-        container: this.fullPage ? null : this.$refs.formContainer
-      });
-      console.log("submit");
+      let loader = this.$loading.show();
+
+      try {
+        await this.$store.dispatch("createUser", {
+          username: this.username,
+          password: this.password
+        });
+        this.$router.push("/");
+      } catch (e) {
+        this.showErr(e.response.data.message);
+      } finally {
+        loader.hide();
+      }
     }
   }
 };

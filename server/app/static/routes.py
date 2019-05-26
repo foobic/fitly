@@ -1,7 +1,5 @@
 import os
-import json
-from flask import (Blueprint, jsonify,
-                   request, render_template, url_for, send_from_directory)
+from flask import (Blueprint, send_from_directory)
 
 static_folder = '../../../front/dist/'
 static_blueprint = Blueprint('static', __name__, static_folder=static_folder)

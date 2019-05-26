@@ -63,9 +63,16 @@ export default {
         if (!isUrlValid(this.url)) return this.showErr("Url is not valid");
 
         this.$store.dispatch("changeUrl", { url: this.url });
-        await this.$store.dispatch("createHashedUrl", { url: this.url });
+        if (this.$store.getters.user.authorized) {
+          await this.$store.dispatch("createHashedUrlAuthorized", {
+            url: this.url
+          });
+        } else {
+          await this.$store.dispatch("createHashedUrl", { url: this.url });
+        }
         this.result.visibility = true;
       } catch (e) {
+        console.log(e.response.data);
         this.showErr(e);
       } finally {
         loader.hide();

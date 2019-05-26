@@ -26,6 +26,10 @@ class LinksModel(db.Model):
         db.session.commit()
 
     @classmethod
+    def find_by_user_id(cls, user_id):
+        return cls.query.filter_by(user_id=user_id)
+
+    @classmethod
     def find_by_hashed_url(cls, hashed_url):
         return cls.query.filter_by(hashed_url=hashed_url).first()
 

@@ -1,6 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
+
+import getters from "./store/getters";
+import actions from "./store/actions";
+import mutations from "./store/mutations";
 
 Vue.use(Vuex);
 
@@ -8,42 +11,11 @@ export default new Vuex.Store({
   state: {
     url: "",
     hashedUrl: "",
-    user: { username: "", authorized: true },
+    user: { username: "", authorized: false },
     links: {},
     urlPrefix: `${process.env.VUE_APP_SERVER_URL}/l/`
   },
-  mutations: {
-    changeUrl(state, payload) {
-      state.url = payload.url;
-    },
-    changeHashedUrl(state, payload) {
-      state.hashedUrl = payload.hashedUrl;
-    }
-  },
-  actions: {
-    changeUrl(ctx, payload) {
-      ctx.commit("changeUrl", payload);
-    },
-    async createHashedUrl(ctx, payload) {
-      const res = await axios.post(`${process.env.VUE_APP_API_URL}/links`, {
-        url: payload.url
-      });
-
-      ctx.commit("changeHashedUrl", { hashedUrl: res.data.hashed_url });
-    }
-  },
-  getters: {
-    user: function(state) {
-      return state.user;
-    },
-    url: function(state) {
-      return state.url;
-    },
-    hashedUrl: function(state) {
-      return state.hashedUrl;
-    },
-    shortUrl: function(state) {
-      return state.urlPrefix + state.hashedUrl;
-    }
-  }
+  mutations,
+  actions,
+  getters
 });

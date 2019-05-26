@@ -58,9 +58,11 @@ def login():
 
         if UsersModel.verify_hash(password, current_user.password):
             access_token = flask_jwt.create_access_token(
-                identity=current_user)
+                identity={"id": current_user.id,
+                          "username": current_user.username})
             refresh_token = flask_jwt.create_refresh_token(
-                identity=current_user)
+                identity={"id": current_user.id,
+                          "username": current_user.username})
             return jsonify({
                 'message': f'Logged in as {current_user.username}',
                 'access_token': access_token,
@@ -100,5 +102,8 @@ def logout_refresh():
 @flask_jwt.jwt_refresh_token_required
 def token_refresh():
     current_user = flask_jwt.get_jwt_identity()
-    access_token = flask_jwt.create_access_token(identity=current_user)
+    print(current_user)
+    access_token = flask_jwt.create_access_token(
+        identity={"id": current_user['id'],
+                  "username": current_user['username']})
     return jsonify({'access_token': access_token}), 200

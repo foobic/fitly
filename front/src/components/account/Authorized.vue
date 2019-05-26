@@ -1,10 +1,13 @@
 <template>
   <v-container class="account-no-authorized">
     <v-layout text-xs-center wrap class="account-authorized">
+      <v-alert v-model="err.visibility" dismissible type="error">
+        {{ err.msg }}
+      </v-alert>
       <div class="greeting">
         <span>
           You are logged in as
-          <b>{{ username }}</b>
+          <b>{{ user.username }}</b>
         </span>
       </div>
 
@@ -17,19 +20,37 @@
         </div>
       </div>
       <div class="logout-btn-wrapper">
-        <v-btn class="center logout-btn">Logout</v-btn>
+        <v-btn class="center logout-btn" @click="logout">Logout</v-btn>
       </div>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "Authorized",
   data() {
     return {
-      username: "asdf"
+      err: { visibility: false, msg: "" },
+      username: ""
     };
+  },
+  computed: {
+    ...mapGetters(["user"])
+  },
+  methods: {
+    async logout() {
+      let loader = this.$loading.show();
+
+      try {
+        await this.$store.dispatch("logout");
+      } catch (e) {
+        this.showErr(e.response.data.message);
+      } finally {
+        loader.hide();
+      }
+    }
   }
 };
 </script>

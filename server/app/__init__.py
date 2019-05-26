@@ -20,7 +20,7 @@ def create_app(config=config.DevConfig):
     CORS(app, supports_credentials=True)
     register_extensions(app)
     register_blueprints(app)
-    # register_errorhandlers(app)
+    register_errorhandlers(app)
 
     return app
 

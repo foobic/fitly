@@ -2,6 +2,9 @@
   <v-container class="account-no-authorized">
     <v-layout class="justify-center">
       <v-flex xs12 md4>
+        <v-alert v-model="err.visibility" dismissible type="error">{{
+          err.msg
+        }}</v-alert>
         <div class="text">
           <span>Login</span>
         </div>
@@ -40,6 +43,7 @@ export default {
   name: "noAuthorized",
   data() {
     return {
+      err: { visibility: false, msg: "" },
       valid: false,
       username: "",
       usernameRules: [
@@ -58,13 +62,27 @@ export default {
   },
 
   methods: {
-    submit() {
+    showErr(msg) {
+      this.err.visibility = true;
+      this.err.msg = msg;
+      setTimeout(() => {
+        this.err.visibility = false;
+      }, 5000);
+    },
+    async submit() {
       if (!this.valid) return;
-      let loader = this.$loading.show({
-        container: this.fullPage ? null : this.$refs.formContainer
-      });
+      let loader = this.$loading.show();
 
-      console.log("submit");
+      try {
+        await this.$store.dispatch("loginUser", {
+          username: this.username,
+          password: this.password
+        });
+      } catch (e) {
+        this.showErr(e.response.data.message);
+      } finally {
+        loader.hide();
+      }
     }
   }
 };
