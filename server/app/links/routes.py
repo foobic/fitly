@@ -22,7 +22,6 @@ def create_link_authorized():
             "hashed_url": new_link.hashed_url
         }), 200
     except Exception as e:
-        print(e)
         return jsonify({'message': 'Something went wrong during saving \
             new link to db'}), 500
 
@@ -43,7 +42,6 @@ def fetch_links_by_user():
             })
         return jsonify(result), 200
     except Exception as e:
-        print(e)
         return jsonify({'message': 'Something went wrong'}), 500
 
 
@@ -60,7 +58,6 @@ def create_link():
             "hashed_url": new_link.hashed_url
         }), 200
     except Exception as e:
-        print(e)
         return jsonify({'message': 'Something went wrong during saving \
             new link to db'}), 500
 
@@ -72,5 +69,4 @@ def get_original_url(hashed_url):
         link.increment_count_visited()
         return redirect(link.url, code=302)
     except Exception as e:
-        print(e)
         return jsonify({'e': "Wrong link url"}), 500

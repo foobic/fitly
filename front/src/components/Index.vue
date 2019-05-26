@@ -72,8 +72,7 @@ export default {
         }
         this.result.visibility = true;
       } catch (e) {
-        console.log(e.response.data);
-        this.showErr(e);
+        this.showErr(e.response.data);
       } finally {
         loader.hide();
       }

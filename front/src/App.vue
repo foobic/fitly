@@ -6,7 +6,9 @@
       </v-btn>
 
       <v-toolbar-title>
-        <router-link to="/" class="toolbar-title toolbar-link" value="Fitly">Fitly</router-link>
+        <router-link to="/" class="toolbar-title toolbar-link" value="Fitly"
+          >Fitly</router-link
+        >
       </v-toolbar-title>
 
       <v-spacer></v-spacer>

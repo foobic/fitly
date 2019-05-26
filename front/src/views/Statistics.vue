@@ -1,9 +1,9 @@
 <template>
   <v-layout>
     <v-flex class="statistics-wrapper">
-      <v-alert v-model="err.visibility" dismissible type="error">
-        {{ err.msg }}
-      </v-alert>
+      <v-alert v-model="err.visibility" dismissible type="error">{{
+        err.msg
+      }}</v-alert>
       <div class="table" v-if="links.length">
         <div class="table-name">
           <span>Statistics</span>
@@ -16,14 +16,14 @@
           >
             <template v-slot:items="props">
               <td>
-                <a :href="urlPrefix + props.item.hashed_url">{{
-                  urlPrefix + props.item.hashed_url
-                }}</a>
+                <a :href="urlPrefix + props.item.hashed_url">
+                  {{ urlPrefix + props.item.hashed_url }}
+                </a>
               </td>
               <td>
-                <a :href="props.item.original_url">
-                  {{ props.item.original_url }}
-                </a>
+                <a :href="props.item.original_url">{{
+                  props.item.original_url
+                }}</a>
               </td>
               <td>{{ props.item.views }}</td>
             </template>

@@ -8,7 +8,6 @@ class UsersModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    # links = db.relationship("LinksModel")
 
     def save_to_db(self):
         db.session.add(self)
@@ -17,23 +16,6 @@ class UsersModel(db.Model):
     @classmethod
     def find_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
-
-    @classmethod
-    def return_all(cls):
-        def to_json(x):
-            return {'username': x.username, 'password': x.password}
-        return {'users': list(
-            map(lambda x: to_json(x), UsersModel.query.all())
-        )}
-
-    @classmethod
-    def delete_all(cls):
-        try:
-            num_rows_deleted = db.session.query(cls).delete()
-            db.session.commit()
-            return {'message': f'{num_rows_deleted} row(s) deleted'}
-        except Exception:
-            return {'message': 'Something went wrong'}
 
     @staticmethod
     def generate_hash(password):
